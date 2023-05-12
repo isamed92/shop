@@ -1,8 +1,14 @@
-// 1- state del provider
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 
+//? 3 - StateNotifierProvider - consume afuera
+final loginFormProvider =
+    StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
+  return LoginFormNotifier();
+});
+
+//? 1- state del provider
 class LoginFormState {
   final bool isPosting;
   final bool isFormPosted;
@@ -45,7 +51,7 @@ class LoginFormState {
       );
 }
 
-// 2- como implementamos un provider
+//? 2- como implementamos un provider
 class LoginFormNotifier extends StateNotifier<LoginFormState> {
   LoginFormNotifier() : super(LoginFormState());
 
@@ -82,9 +88,3 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
         ]));
   }
 }
-
-// 3- StateNotifierProvider - consume afuera
-final loginFormProvider =
-    StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
-  return LoginFormNotifier();
-});
