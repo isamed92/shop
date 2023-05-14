@@ -14,8 +14,12 @@ class KeyValueStorageServiceImpl extends KeyValueStorageService {
     switch (T) {
       case int:
         return prefs.getInt(key) as T?;
+
       case String:
         return prefs.getString(key) as T?;
+      case dynamic:
+        return prefs.get(key) as T?;
+
       default:
         throw UnimplementedError(
             'Get not implemented for type ${T.runtimeType}');

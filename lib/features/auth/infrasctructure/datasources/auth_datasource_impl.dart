@@ -6,9 +6,20 @@ import 'package:teslo_shop/features/auth/infrasctructure/infrasctructure.dart';
 class AuthDatasourceImpl extends AuthDatasource {
   final Dio dio = Dio(BaseOptions(baseUrl: Environment.apiUrl));
   @override
-  Future<User> checkAuthStatus(String token) {
-    // TODO: implement checkAuthStatus
-    throw UnimplementedError();
+  Future<User> checkAuthStatus(String token) async {
+    try {
+      final response = await dio.get('/auth/check-status',
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+      final user = UserMapper.userJsonToEntity(response.data);
+      return user;
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) throw WrongCredentials();
+      if (e.type == DioErrorType.connectionTimeout) throw ConnectionTimeout();
+      throw CustomError(
+          e.response?.data['message'] ?? 'Algo desconocido ocurrio');
+    } catch (e) {
+      throw CustomError('Algo desconocido ocurrio');
+    }
   }
 
   @override
