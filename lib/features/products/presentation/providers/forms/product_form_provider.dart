@@ -1,15 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:teslo_shop/config/constants/environments.dart';
-import 'package:teslo_shop/features/products/presentation/providers/products_repository_provider.dart';
+import 'package:teslo_shop/features/products/presentation/providers/provider.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 
 import '../../../domain/domain.dart';
 
 final productFormProvider = StateNotifierProvider.autoDispose
     .family<ProductFormNotifier, ProductFormState, Product>((ref, product) {
+  // final createUpdateCallback = ref.watch(productsRepositoryProvider).createUpdateProduct;
   final createUpdateCallback =
-      ref.watch(productsRepositoryProvider).createUpdateProduct;
+      ref.watch(productsProvider.notifier).createOrUpdateProduct;
   return ProductFormNotifier(
       product: product, onSubmitCallback: createUpdateCallback);
 });
@@ -69,7 +70,7 @@ class ProductFormState {
 }
 
 class ProductFormNotifier extends StateNotifier<ProductFormState> {
-  final Future<Product> Function(Map<String, dynamic> productLike)?
+  final Future<bool> Function(Map<String, dynamic> productLike)?
       onSubmitCallback;
 
   ProductFormNotifier({required Product product, this.onSubmitCallback})
@@ -162,8 +163,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     };
 
     try {
-      await onSubmitCallback!(productLike);
-      return true;
+      return await onSubmitCallback!(productLike);
     } catch (e) {}
 
     return false;
