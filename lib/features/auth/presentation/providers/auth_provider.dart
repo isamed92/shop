@@ -36,7 +36,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   void _setLoggedUser(User user) {
     //TODO: necesitamos guardar el token fisicamente
-    state = state.copyWith(user: user, authStatus: AuthStatus.authenticated);
+    state = state.copyWith(
+        user: user, authStatus: AuthStatus.authenticated, errorMessage: '');
   }
 
   Future<void> logout([String? errorMessage]) async {
