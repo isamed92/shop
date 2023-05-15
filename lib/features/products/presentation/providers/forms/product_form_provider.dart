@@ -178,4 +178,8 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
       Stock.dirty(state.inStock.value)
     ]));
   }
+
+  void updateProductImage(String path) {
+    state = state.copyWith(images: [...state.images, path]);
+  }
 }
